@@ -18,6 +18,10 @@ import {
   FlatList
 } from 'react-native';
 import H1 from './src/components/Text/H1';
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import AuthStack from './src/navigators/AuthStack';
 
 const StylingDasar = () => {
   return (
@@ -61,28 +65,28 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue"
   },
   todoItemContainer: {
-    flexDirection:"row",
-    alignItems:"center",
-    marginVertical:4,
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 4,
   },
-  deleteBtn:{
-    backgroundColor:"red",
-    paddingHorizontal:8,
-    paddingVertical:4,
-    borderRadius:4,
-    marginLeft:12,
+  deleteBtn: {
+    backgroundColor: "red",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    marginLeft: 12,
   },
-  addTodoBtn:{
-    backgroundColor:"lightgray",
-    paddingHorizontal:8,
-    paddingVertical:4,
-    borderRadius:4,
-    marginTop:8,
-    alignSelf:"center"
+  addTodoBtn: {
+    backgroundColor: "lightgray",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    marginTop: 8,
+    alignSelf: "center"
   }
 })
 
-const App = () => {
+const Todo = () => {
   //    nama state, nama fnc utk setstate
   const [inputText, setInputText] = useState('')
   const [todoList, setTodoList] = useState([])
@@ -96,52 +100,64 @@ const App = () => {
     setInputText(text)
   }
   const deleteTodoHandler = (deleteIdx) => {
-    const newArr = todoList.filter((val,idx)=> {
+    const newArr = todoList.filter((val, idx) => {
       return idx !== deleteIdx
     })
     setTodoList(newArr)
   }
-  const renderTodoList = ({ item,index }) => {
-    return(
-      <View style={{...styles.todoItemContainer}}>
-      <Text>{item}</Text>
-      <TouchableOpacity 
-      style={styles.deleteBtn}
-      onPress={()=>deleteTodoHandler(index)}>
-        <Text>Delete</Text>
-      </TouchableOpacity>
+  const renderTodoList = ({ item, index }) => {
+    return (
+      <View style={{ ...styles.todoItemContainer }}>
+        <Text>{item}</Text>
+        <TouchableOpacity
+          style={styles.deleteBtn}
+          onPress={() => deleteTodoHandler(index)}>
+          <Text>Delete</Text>
+        </TouchableOpacity>
       </View>
-      
+
     )
   }
   return (
-    <>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {/* <StylingDasar /> */}
-        <SafeAreaView />
-        <H1 style={{color:"red"}}>Halo Dunia</H1>
-        {/* <Text>{inputText}</Text> */}
-        <TextInput
-          onChangeText={inputHandler}
-          // style={[styles.textInput,styles.bgRed]}
-          style={{ ...styles.textInput, ...styles.bgRed }}
-          placeholder="Your Todo here" />
-        <TouchableOpacity style={{...styles.addTodoBtn}} onPress={addTodoHandler}>
-          <Text>ADD TODO</Text>
-        </TouchableOpacity>
-        {/* <ScrollView>
-          {
-            todoList.map((val, idx) => {
-              return <Text key={idx.toString()}>{val}</Text>
-            })
-          }
-        </ScrollView> */}
-        <FlatList
-          keyExtractor={(itemy, idx) => idx.toString()}
-          data={todoList}
-          renderItem={renderTodoList} />
-      </View>
-    </>
+    <View>
+      {/* <StylingDasar /> */}
+      <SafeAreaView />
+      <H1 style={{ color: "red" }}>Halo Dunia</H1>
+      {/* <Text>{inputText}</Text> */}
+      <TextInput
+        onChangeText={inputHandler}
+        // style={[styles.textInput,styles.bgRed]}
+        style={{ ...styles.textInput, ...styles.bgRed }}
+        placeholder="Your Todo here" />
+      <TouchableOpacity style={{ ...styles.addTodoBtn }} onPress={addTodoHandler}>
+        <Text>ADD TODO</Text>
+      </TouchableOpacity>
+      {/* <ScrollView>
+              {
+                todoList.map((val, idx) => {
+                  return <Text key={idx.toString()}>{val}</Text>
+                })
+              }
+            </ScrollView> */}
+      <FlatList
+        keyExtractor={(itemy, idx) => idx.toString()}
+        data={todoList}
+        renderItem={renderTodoList} />
+    </View>
+  )
+}
+
+
+const Tab = createBottomTabNavigator()
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="AuthStack" component={AuthStack} />
+        <Tab.Screen name="Todo" component={Todo} />
+      </Tab.Navigator>
+    </NavigationContainer>
   )
 }
 
